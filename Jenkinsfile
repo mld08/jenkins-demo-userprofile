@@ -1,46 +1,50 @@
 pipeline {
-    agent {
-        docker {
-            image 'docker:latest'
-            args '--privileged -v /var/run/docker.sock:/var/run/docker.sock'
-        }
+    agent any
+
+    environment{
+
     }
-    environment {
-        DOCKER_IMAGE = 'your-docker-image-name:latest'
-    }
+
     stages {
-        stage('Checkout') {
+        stage('Checkout'){
             steps {
+                echo 'Clonage du dépot...'
                 checkout scm
             }
         }
-        stage('Build Docker Image') {
+        stage('Build & Test Django app') {
             steps {
-                script {
-                    sh 'docker build -t $DOCKER_IMAGE .'
+                dir('Backend/odc') {
+                    echo "Création de l'environnement virtuel et test de Django"
+                    sh '''
+                        apt install python3 
+                        python3 -m venv venv
+                        . venv/bin/activate
+                        pip install --upgrade pip
+                        pip install requirements.txt
+                        python3 manage.py test
+                    '''
                 }
             }
         }
-        stage('Test') {
+        /*stage('Test') {
             steps {
-                script {
-                    sh 'docker run --rm $DOCKER_IMAGE ./run-tests.sh'
-                }
+                echo 'Testing...'
+                // Add your test commands here
             }
         }
-        stage('Push Docker Image') {
+        stage('Deploy') {
             steps {
-                script {
-                    withDockerRegistry([credentialsId: 'docker-hub-credentials', url: '']) {
-                        sh 'docker push $DOCKER_IMAGE'
-                    }
-                }
+                echo 'Deploying...'
+                // Add your deployment commands here
             }
-        }
+        }*/
     }
+
     post {
         always {
-            cleanWs()
+            echo 'Cleaning up...'
+            // Add cleanup commands here
         }
     }
 }
