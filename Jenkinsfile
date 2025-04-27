@@ -17,13 +17,7 @@ pipeline {
                 checkout scm
             }
         }
-        stage('Run Python Command') {
-            steps {
-                sh 'python3 --version'
-                sh 'python3 -c "print(\'Hello depuis un agent Docker Python !\')"'
-            }
-        }
-        /*stage('Build & Test Django app') {
+        stage('Build & Test Django app') {
             steps {
                 dir('Backend/odc') {
                     echo "Création de l'environnement virtuel et test de Django"
@@ -36,7 +30,7 @@ pipeline {
                     '''
                 }
             }
-        }*/
+        }
         /*stage('Test') {
             steps {
                 echo 'Testing...'
