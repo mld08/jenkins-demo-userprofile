@@ -71,6 +71,20 @@ pipeline {
                 }
             }
         }
+
+        stage('RUN THE APP') {
+            agent any
+            steps {
+                echo 'Lancement de l\'application...'
+                script() {
+                    echo "🚀 Lancement de l'application"
+                    sh '''
+                        docker-compose down || true # Stop and remove any existing containers
+                        docker-compose up --build -d
+                    '''
+                }
+            }
+        }
     }
 
     post {
