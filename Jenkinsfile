@@ -66,7 +66,7 @@ pipeline {
                         sh "docker build -t ${DOCKERHUB_USER}/userprofile_backend:latest -f Dockerfile ."
                             
                         echo "🐳 Construction de l'image Docker Frontend"
-                        sh "docker build -t ${DOCKERHUB_USER}/userprofile_frontend:latest ./Frontend"
+                        sh "docker build -t ${DOCKERHUB_USER}/userprofile_frontend:latest ."
                     }
                 }
             }
