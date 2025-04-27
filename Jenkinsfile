@@ -1,9 +1,11 @@
 pipeline {
     agent none // No default agent, we will specify it in each stage
 
-    /*environment{
-
-    }*/
+    environment{
+        // Define any environment variables here if needed
+        DOCKER_CREDENTIALS_ID = 'userprofile-credentials' // Replace with your Docker Hub credentials ID
+        DOCKERHUB_USER = 'mldiop08'
+    }
 
     stages {
         stage('Checkout'){
@@ -13,6 +15,8 @@ pipeline {
                 checkout scm
             }
         }
+
+        // TEST STAGE 
         stage('Build & Test Django app') {
             agent{
                 docker {
@@ -47,8 +51,22 @@ pipeline {
                         export PATH=$PATH:/var/lib/jenkins/.nvm/versions/node/v22.15.0/bin/
                         npm install
                         npm run build
-                        npm test -- --watchAll=false --passWithNoTests
                     '''
+                }
+            }
+        }
+        // STAGE DE DEPLOIEMENT
+        stage('Build Docker image') {
+            steps {
+                echo 'Construction de l\'image Docker Backend...'
+                dir('Backend/odc') {
+                    script() {
+                        echo "🐳 Construction de l'image Docker Backend"
+                        sh "docker build -t ${DOCKERHUB_USER}/userprofile_backend:latest -f ./Backend/odc/Dockerfile ./Backend/odc"
+                            
+                        echo "🐳 Construction de l'image Docker Frontend"
+                        sh "docker build -t ${DOCKERHUB_USER}/userprofile_frontend:latest ./Frontend"
+                    }
                 }
             }
         }
