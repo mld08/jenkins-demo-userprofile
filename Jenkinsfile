@@ -63,7 +63,7 @@ pipeline {
                 dir('Backend/odc') {
                     script() {
                         echo "🐳 Construction de l'image Docker Backend"
-                        sh "docker build -t ${DOCKERHUB_USER}/userprofile_backend:latest -f ./Backend/odc/Dockerfile ./Backend/odc"
+                        sh "docker build -t ${DOCKERHUB_USER}/userprofile_backend:latest -f Dockerfile ."
                             
                         echo "🐳 Construction de l'image Docker Frontend"
                         sh "docker build -t ${DOCKERHUB_USER}/userprofile_frontend:latest ./Frontend"
