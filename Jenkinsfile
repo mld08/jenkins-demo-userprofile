@@ -57,6 +57,7 @@ pipeline {
         }
         // STAGE DE DEPLOIEMENT
         stage('Build Docker image') {
+            agent any
             steps {
                 echo 'Construction de l\'image Docker Backend...'
                 dir('Backend/odc') {
