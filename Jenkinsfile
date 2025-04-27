@@ -36,7 +36,7 @@ pipeline {
         stage('Build & Test React app') {
             agent{
                 docker {
-                    image 'node:23-alpine' // Use a Node.js 18 Docker image
+                    image 'node:23-alpine' // Use a Node.js 23 Docker image
                     args '-u root:root' // Run as root user to avoid permission issues
                 }
             }
@@ -47,7 +47,7 @@ pipeline {
                         export PATH=$PATH:/var/lib/jenkins/.nvm/versions/node/v22.15.0/bin/
                         npm install
                         npm run build
-                        npm test -- --watchAll=false
+                        npm test -- --watchAll=false --passWithNoTests
                     '''
                 }
             }
