@@ -1,5 +1,11 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'python:3.12-slim' // Use a Python 3.9 Docker image
+            args '-u root:root' // Run as root user to avoid permission issues
+        }
+        label 'docker' // Use a specific label for the agent
+    }
 
     /*environment{
 
@@ -12,12 +18,17 @@ pipeline {
                 checkout scm
             }
         }
-        stage('Build & Test Django app') {
+        stage('Run Python Command') {
+            steps {
+                sh 'python3 --version'
+                sh 'python3 -c "print(\'Hello depuis un agent Docker Python !\')"'
+            }
+        }
+        /*stage('Build & Test Django app') {
             steps {
                 dir('Backend/odc') {
                     echo "Création de l'environnement virtuel et test de Django"
                     sh '''
-                        apt install python3 
                         python3 -m venv venv
                         . venv/bin/activate
                         pip install --upgrade pip
@@ -26,7 +37,7 @@ pipeline {
                     '''
                 }
             }
-        }
+        }*/
         /*stage('Test') {
             steps {
                 echo 'Testing...'
