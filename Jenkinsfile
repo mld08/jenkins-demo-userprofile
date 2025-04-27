@@ -4,7 +4,6 @@ pipeline {
             image 'python:3.12-slim' // Use a Python 3.9 Docker image
             args '-u root:root' // Run as root user to avoid permission issues
         }
-        label 'docker' // Use a specific label for the agent
     }
 
     /*environment{
