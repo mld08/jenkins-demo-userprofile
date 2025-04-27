@@ -5,7 +5,7 @@ pipeline {
         // Define any environment variables here if needed
         DOCKER_CREDENTIALS_ID = 'userprofile-credentials' // Replace with your Docker Hub credentials ID
         DOCKERHUB_USER = 'mldiop08'
-        DOCKER_PASSWORD = credentials("${DOCKER_CREDENTIALS_ID}").password
+        DOCKER_CREDENTIALS = credentials('userprofile-credentials') 
     }
 
     stages {
@@ -74,20 +74,20 @@ pipeline {
         }
 
         stage('Push docker images') {
-            agent any
-            steps {
-                echo "🚀 Envoi des images Docker sur Docker Hub"
-                withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDENTIALS_ID}", passwordVariable: "${DOCKER_PASSWORD}", usernameVariable: "${DOCKERHUB_USER}")]) {
-                    script() {
-                        sh '''
-                            echo "$DOCKER_PASSWORD" | docker login -u "$DOCKERHUB_USER" --password-stdin
-                            docker push ${DOCKERHUB_USER}/userprofile_backend:latest
-                            docker push ${DOCKERHUB_USER}/userprofile_frontend:latest
-                        '''
-                    }
-                }
+        agent any
+        steps {
+            echo "🚀 Envoi des images Docker sur Docker Hub"
+            withCredentials([usernamePassword(credentialsId: 'userprofile-credentials', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKER_PASSWORD')]) {
+                sh '''
+                    echo "$DOCKER_PASSWORD" | docker login -u "$DOCKERHUB_USER" --password-stdin
+                    docker push $DOCKERHUB_USER/userprofile_backend:latest
+                    docker push $DOCKERHUB_USER/userprofile_frontend:latest
+                '''
             }
+            echo "✅ Images Docker envoyées avec succès"
         }
+    }
+
 
         stage('RUN THE APP') {
             agent any
