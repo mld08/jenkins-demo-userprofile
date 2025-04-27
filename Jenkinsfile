@@ -79,8 +79,8 @@ pipeline {
                 script() {
                     echo "🚀 Lancement de l'application"
                     sh '''
-                        docker-compose down || true # Stop and remove any existing containers
-                        docker-compose up --build -d
+                        docker compose down || true # Stop and remove any existing containers
+                        docker compose up --build -d # Build and run the containers in detached mode
                     '''
                 }
             }
