@@ -4,6 +4,10 @@ pipeline {
             image 'python:3.12-slim' // Use a Python 3.9 Docker image
             args '-u root:root' // Run as root user to avoid permission issues
         }
+        docker {
+            image 'node:18-alpine' // Use a Node.js 18 Docker image
+            args '-u root:root' // Run as root user to avoid permission issues
+        }
     }
 
     /*environment{
@@ -31,18 +35,19 @@ pipeline {
                 }
             }
         }
-        /*stage('Test') {
+        stage('Build & Test React app') {
             steps {
-                echo 'Testing...'
-                // Add your test commands here
+                dir('Frontend') {
+                    echo "Installation des dépendances et test de React"
+                    sh '''
+                        export PATH=$PATH:/var/lib/jenkins/.nvm/versions/node/v22.15.0/bin/
+                        npm install
+                        npm run build
+                        npm test -- --watchAll=false
+                    '''
+                }
             }
         }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying...'
-                // Add your deployment commands here
-            }
-        }*/
     }
 
     post {
