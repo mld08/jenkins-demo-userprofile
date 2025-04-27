@@ -36,7 +36,7 @@ pipeline {
         stage('Build & Test React app') {
             agent{
                 docker {
-                    image 'node:18-alpine' // Use a Node.js 18 Docker image
+                    image 'node:23-alpine' // Use a Node.js 18 Docker image
                     args '-u root:root' // Run as root user to avoid permission issues
                 }
             }
