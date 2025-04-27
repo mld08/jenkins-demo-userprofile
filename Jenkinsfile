@@ -7,6 +7,7 @@ pipeline {
 
     stages {
         stage('Checkout'){
+            agent any
             steps {
                 echo 'Clonage du dépot...'
                 checkout scm
