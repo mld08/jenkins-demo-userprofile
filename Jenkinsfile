@@ -1,10 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'python:3.12-slim' // Use a Python 3.9 Docker image
-            args '-u root:root' // Run as root user to avoid permission issues
-        }
-    }
+    agent none // No default agent, we will specify it in each stage
 
     /*environment{
 
@@ -18,6 +13,12 @@ pipeline {
             }
         }
         stage('Build & Test Django app') {
+            agent{
+                docker {
+                    image 'python:3.12-slim' // Use a Python 3.11 Docker image
+                    args '-u root:root' // Run as root user to avoid permission issues
+                }
+            }
             steps {
                 dir('Backend/odc') {
                     echo "Création de l'environnement virtuel et test de Django"
