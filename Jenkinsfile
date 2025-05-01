@@ -20,7 +20,11 @@ pipeline {
         }
 
         stage('SonarQube Analysis for Backend') {
-            agent any
+            agent {
+                docker {
+                    image 'sonarsource/sonar-scanner-cli:latest'
+                }
+            }
             steps {
                 dir('Backend/odc') {
                     echo 'Analyse SonarQube du Backend...'
