@@ -30,7 +30,7 @@ pipeline {
                     echo 'Analyse SonarQube du Backend...'
                     withSonarQubeEnv('SonarQube') {
                         sh '''
-                            sonar-scanner -Dsonar.token=$SONARQUBE_TOKEN
+                            sonar-scanner -Dsonar.token=$SONARQUBE_TOKEN -Dsonar.host.url=http://host.docker.internal:9000
                         '''
                     }
                 }
