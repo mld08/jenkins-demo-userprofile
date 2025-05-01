@@ -4,9 +4,9 @@ pipeline {
     environment{
         // Define any environment variables here if needed
         DOCKER_CREDENTIALS_ID = 'userprofile-credentials' // Replace with your Docker Hub credentials ID
-        DOCKERHUB_USER = 'mldiop08'
-        DOCKER_CREDENTIALS = credentials('userprofile-credentials') 
-        SONARQUBE_URL = 'https://f1de-41-214-74-161.ngrok-free.app/'
+        DOCKERHUB_USER = 'mldiop08' // Replace with your Docker Hub username
+        DOCKER_CREDENTIALS = credentials('userprofile-credentials')  // Replace with your Docker Hub credentials ID
+        SONARQUBE_URL = 'https://96bf-41-82-173-32.ngrok-free.app' // Replace with your SonarQube URL
         SONARQUBE_TOKEN = credentials('SONAR_TOKEN') // Replace with your SonarQube token ID
     }
 
@@ -27,6 +27,19 @@ pipeline {
             }
             steps {
                 dir('Backend/odc') {
+                    echo 'Analyse SonarQube du Backend...'
+                    withSonarQubeEnv('SonarQube') {
+                        sh '''
+                            sonar-scanner -Dsonar.token=$SONARQUBE_TOKEN -Dsonar.host.url=$SONARQUBE_URL 
+                        '''
+                    }
+                }
+                /*withSonarQubeEnv('SonarQube') {
+                    sh 'sonar-scanner'
+                }*/
+            }
+            steps {
+                dir('Frontend') {
                     echo 'Analyse SonarQube du Backend...'
                     withSonarQubeEnv('SonarQube') {
                         sh '''
