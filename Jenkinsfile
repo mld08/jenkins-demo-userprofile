@@ -6,7 +6,7 @@ pipeline {
         DOCKER_CREDENTIALS_ID = 'userprofile-credentials' // Replace with your Docker Hub credentials ID
         DOCKERHUB_USER = 'mldiop08'
         DOCKER_CREDENTIALS = credentials('userprofile-credentials') 
-        SONARQUBE_URL = 'http://localhost:9000'
+        SONARQUBE_URL = 'https://f1de-41-214-74-161.ngrok-free.app/'
         SONARQUBE_TOKEN = credentials('SONAR_TOKEN') // Replace with your SonarQube token ID
     }
 
@@ -30,7 +30,7 @@ pipeline {
                     echo 'Analyse SonarQube du Backend...'
                     withSonarQubeEnv('SonarQube') {
                         sh '''
-                            sonar-scanner -Dsonar.token=$SONARQUBE_TOKEN -Dsonar.host.url=http://host.docker.internal:9000
+                            sonar-scanner -Dsonar.token=$SONARQUBE_TOKEN -Dsonar.host.url=$SONARQUBE_URL 
                         '''
                     }
                 }
