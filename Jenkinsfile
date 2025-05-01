@@ -20,19 +20,18 @@ pipeline {
         }
 
         stage('SonarQube Analysis for Backend') {
-            agent any /*{
+            agent {
                 docker {
                     image 'sonarsource/sonar-scanner-cli'
                 }
-            }*/
+            }
             steps {
                 dir('Backend/odc') {
                     echo 'Analyse SonarQube du Backend...'
                     withSonarQubeEnv('SonarQube') {
-                        sh "${tool 'SonarScanner'}/bin/sonar-scanner -Dsonar.token=$SONARQUBE_TOKEN -Dsonar.host.url=$SONARQUBE_URL"
-                        /*sh '''
+                        sh '''
                             sonar-scanner -Dsonar.token=$SONARQUBE_TOKEN -Dsonar.host.url=$SONARQUBE_URL 
-                        '''*/
+                        '''
                     }
                 }
             }
