@@ -6,6 +6,8 @@ pipeline {
         DOCKER_CREDENTIALS_ID = 'userprofile-credentials' // Replace with your Docker Hub credentials ID
         DOCKERHUB_USER = 'mldiop08'
         DOCKER_CREDENTIALS = credentials('userprofile-credentials') 
+        SONARQUBE_URL = 'http://localhost:9000'
+        SONARQUBE_TOKEN = credentials('SONAR_TOKEN') // Replace with your SonarQube token ID
     }
 
     stages {
@@ -14,6 +16,23 @@ pipeline {
             steps {
                 echo 'Clonage du dépot...'
                 checkout scm
+            }
+        }
+
+        stage('SonarQube Analysis for Backend') {
+            agent any
+            steps {
+                dir('Backend/odc') {
+                    echo 'Analyse SonarQube du Backend...'
+                    withSonarQubeEnv('SonarQube') {
+                        sh '''
+                            sonar-scanner -Dsonar.token=$SONARQUBE_TOKEN
+                        '''
+                    }
+                }
+                /*withSonarQubeEnv('SonarQube') {
+                    sh 'sonar-scanner'
+                }*/
             }
         }
 
