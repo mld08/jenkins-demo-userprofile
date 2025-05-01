@@ -34,22 +34,24 @@ pipeline {
                         '''
                     }
                 }
-                /*withSonarQubeEnv('SonarQube') {
-                    sh 'sonar-scanner'
-                }*/
+            }
+        }
+
+        stage('Sonarqube Analysis for Frontend') {
+            agent {
+                docker {
+                    image 'sonarsource/sonar-scanner-cli'
+                }
             }
             steps {
                 dir('Frontend') {
-                    echo 'Analyse SonarQube du Backend...'
+                    echo 'Analyse SonarQube du Frontend...'
                     withSonarQubeEnv('SonarQube') {
                         sh '''
                             sonar-scanner -Dsonar.token=$SONARQUBE_TOKEN -Dsonar.host.url=$SONARQUBE_URL 
                         '''
                     }
                 }
-                /*withSonarQubeEnv('SonarQube') {
-                    sh 'sonar-scanner'
-                }*/
             }
         }
 
