@@ -6,7 +6,7 @@ pipeline {
         DOCKER_CREDENTIALS_ID = 'userprofile-credentials' // Replace with your Docker Hub credentials ID
         DOCKERHUB_USER = 'mldiop08' // Replace with your Docker Hub username
         DOCKER_CREDENTIALS = credentials('userprofile-credentials')  // Replace with your Docker Hub credentials ID
-        SONARQUBE_URL = 'http://localhost:9000' // Replace with your SonarQube URL
+        SONARQUBE_URL = 'https://95f4-41-214-74-161.ngrok-free.app' // Replace with your SonarQube URL
         SONARQUBE_TOKEN = credentials('SONAR_TOKEN') // Replace with your SonarQube token ID
     }
 
