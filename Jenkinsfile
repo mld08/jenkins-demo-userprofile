@@ -6,7 +6,7 @@ pipeline {
         DOCKER_CREDENTIALS_ID = 'userprofile-credentials' // Replace with your Docker Hub credentials ID
         DOCKERHUB_USER = 'mldiop08' // Replace with your Docker Hub username
         DOCKER_CREDENTIALS = credentials('userprofile-credentials')  // Replace with your Docker Hub credentials ID
-        SONARQUBE_URL = 'https://96bf-41-82-173-32.ngrok-free.app' // Replace with your SonarQube URL
+        SONARQUBE_URL = 'http://localhost:9000' // Replace with your SonarQube URL
         SONARQUBE_TOKEN = credentials('SONAR_TOKEN') // Replace with your SonarQube token ID
     }
 
@@ -20,37 +20,25 @@ pipeline {
         }
 
         stage('SonarQube Analysis for Backend') {
-            agent any/*{
-                docker {
-                    image 'sonarsource/sonar-scanner-cli'
-                }
-            }*/
+            agent any
             steps {
                 dir('Backend/odc') {
                     echo 'Analyse SonarQube du Backend...'
                     withSonarQubeEnv('SonarQube') {
                         sh "${tool 'SonarScanner'}/bin/sonar-scanner -Dsonar.token=$SONARQUBE_TOKEN -Dsonar.host.url=$SONARQUBE_URL"
-                        /*sh '''
-                            sonar-scanner -Dsonar.token=$SONARQUBE_TOKEN -Dsonar.host.url=$SONARQUBE_URL 
-                        '''*/
+                        
                     }
                 }
             }
         }
 
         stage('Sonarqube Analysis for Frontend') {
-            agent {
-                docker {
-                    image 'sonarsource/sonar-scanner-cli'
-                }
-            }
+            agent any
             steps {
                 dir('Frontend') {
                     echo 'Analyse SonarQube du Frontend...'
                     withSonarQubeEnv('SonarQube') {
-                        sh '''
-                            sonar-scanner -Dsonar.token=$SONARQUBE_TOKEN -Dsonar.host.url=$SONARQUBE_URL 
-                        '''
+                        sh "${tool 'SonarScanner'}/bin/sonar-scanner -Dsonar.token=$SONARQUBE_TOKEN -Dsonar.host.url=$SONARQUBE_URL"
                     }
                 }
             }
