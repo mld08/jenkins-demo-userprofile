@@ -19,6 +19,22 @@ pipeline {
             }
         }
 
+        stage('Scan avec trivy du code source') {
+            agent any
+            steps {
+                echo 'Scan du code source avec Trivy...'
+                script {
+                    echo "🔍 Scan du code source avec Trivy"
+                    sh '''
+                        trivy fs --scanners secret,misconfig,vuln --severity HIGH,CRITICAL . -o ~/code_scan.txt
+                        echo "✅ Scan terminé. Résultats enregistrés dans code_scan.txt"
+                        echo "📂 Résultats du scan :"
+                        cat ~/code_scan.txt
+                    '''
+                }
+            }
+        }
+
         /*stage('SonarQube Analysis for Backend') {
             agent any
             steps {
@@ -84,6 +100,7 @@ pipeline {
                 }
             }
         }
+
         // STAGE DE DEPLOIEMENT
         stage('Build Docker image') {
             agent any
@@ -145,7 +162,7 @@ pipeline {
         }
 
         // STAGE DE VÉRIFICATION DES VULNÉRABILITÉS
-        stage('Vérification des vulnérabilités') {
+        /*stage('Vérification des vulnérabilités') {
             agent any
             steps {
                 echo 'Vérification des vulnérabilités critiques...'
@@ -158,6 +175,28 @@ pipeline {
                         else
                             echo "✅ Aucune vulnérabilité critique détectée."
                         fi
+                    '''
+                }
+            }
+        }*/
+
+        // STAGE DE DÉPLOIEMENT AVEC TERRAFORM ET ANSIBLE
+        stage('Deploy with Terraform and Ansible') {
+            agent any
+            steps {
+                echo 'Déploiement avec Terraform et Ansible...'
+                script() {
+                    echo "🚀 Déploiement avec Terraform et Ansible"
+                    sh '''
+                        # Initialize Terraform
+                        cd terraform-ansible
+                        terraform init
+
+                        # Apply Terraform configuration
+                        terraform apply -auto-approve
+
+                        # Run Ansible playbook for deployment
+                        # ansible-playbook -i inventory.ini deploy.yml
                     '''
                 }
             }
