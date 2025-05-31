@@ -128,10 +128,23 @@ pipeline {
                 script() {
                     echo "🔍 Scan des images Docker"
                     sh '''
-                        trivy image --severity HIGH,CRITICAL $DOCKERHUB_USER/userprofile_backend:latest -f json > ~/backend_scan.json
-                        trivy image --severity HIGH,CRITICAL $DOCKERHUB_USER/userprofile_frontend:latest -f json > ~/frontend_scan.json
+                        trivy image --severity HIGH,CRITICAL $DOCKERHUB_USER/userprofile_backend:latest > ~/backend_scan.txt
+                        trivy image --severity HIGH,CRITICAL $DOCKERHUB_USER/userprofile_frontend:latest > ~/frontend_scan.txt
 
-                        echo "✅ Scan terminé. Résultats enregistrés dans backend_scan.json et frontend_scan.json"
+                        echo "✅ Scan terminé. Résultats enregistrés dans backend_scan.txt et frontend_scan.txt"
+                        echo "📂 Résultats du scan :"
+                        echo "📄 Backend Scan Results:"
+                        cat ~/backend_scan.txt
+                        echo "📄 Frontend Scan Results:"
+                        cat ~/frontend_scan.txt
+
+                        echo "🚨 Vérification des vulnérabilités critiques..."
+                        if grep -q 'CRITICAL' ~/backend_scan.txt || grep -q 'CRITICAL' ~/frontend_scan.txt; then
+                            echo "❌ Des vulnérabilités critiques ont été détectées. Échec du pipeline."
+                            exit 1
+                        else
+                            echo "✅ Aucune vulnérabilité critique détectée."
+                        fi
                     '''
                 }
             }
