@@ -65,6 +65,7 @@ pipeline {
                 }
             }
         }
+        
         stage('Build & Test React app') {
             agent{
                 docker {
@@ -120,7 +121,7 @@ pipeline {
                 echo "✅ Images Docker envoyées avec succès"
             }
         }
-        
+
         // STAGE DE SCAN DES IMAGES DOCKER AVEC TRIVY
         stage('Scan Docker images') {
             agent any
@@ -150,7 +151,6 @@ pipeline {
                 }
             }
         }
-    }
 
 
         /*stage('RUN THE APP') {
