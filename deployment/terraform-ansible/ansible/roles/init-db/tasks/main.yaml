@@ -1,0 +1,11 @@
+- name: Run Django migrations inside backend pod
+  kubernetes.core.k8s_exec:
+    namespace: default
+    pod: "{{ backend_pod.stdout }}"
+    command: python manage.py migrate
+
+# OR decomment the following lines to use kubectl exec directly if you don't have the k8s_exec module
+
+# - name: Run Django migrations inside backend pod
+#   command: kubectl exec -n default {{ backend_pod.stdout }} -- python manage.py migrate
+
