@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://172.17.152.12:30243/api/', 
+  baseURL: 'http://backend.mld/api/', 
 });
 
 

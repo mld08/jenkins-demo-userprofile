@@ -6,8 +6,8 @@ pipeline {
         DOCKER_CREDENTIALS_ID = 'userprofile-credentials' // Replace with your Docker Hub credentials ID
         DOCKERHUB_USER = 'mldiop08' // Replace with your Docker Hub username
         DOCKER_CREDENTIALS = credentials('userprofile-credentials')  // Replace with your Docker Hub credentials ID
-        SONARQUBE_URL = 'https://95f4-41-214-74-161.ngrok-free.app' // Replace with your SonarQube URL
-        SONARQUBE_TOKEN = credentials('SONAR_TOKEN') // Replace with your SonarQube token ID
+        //SONARQUBE_URL = 'https://95f4-41-214-74-161.ngrok-free.app' // Replace with your SonarQube URL
+        //SONARQUBE_TOKEN = credentials('SONAR_TOKEN') // Replace with your SonarQube token ID
     }
 
     stages {
@@ -19,7 +19,7 @@ pipeline {
             }
         }
 
-        stage('SonarQube Analysis for Backend') {
+        /*stage('SonarQube Analysis for Backend') {
             agent any
             steps {
                 dir('Backend/odc') {
@@ -42,7 +42,7 @@ pipeline {
                     }
                 }
             }
-        }
+        }*/
 
         // TEST STAGE 
         stage('Build & Test Django app') {
@@ -93,6 +93,12 @@ pipeline {
                         echo "🐳 Construction de l'image Docker Backend"
                         sh "docker build -t ${DOCKERHUB_USER}/userprofile_backend:latest -f Dockerfile ."
                             
+                        //echo "🐳 Construction de l'image Docker Frontend"
+                        //sh "docker build -t ${DOCKERHUB_USER}/userprofile_frontend:latest ."
+                    }
+                }
+                dir('Frontend') {
+                    script() {
                         echo "🐳 Construction de l'image Docker Frontend"
                         sh "docker build -t ${DOCKERHUB_USER}/userprofile_frontend:latest ."
                     }
@@ -113,10 +119,27 @@ pipeline {
             }
             echo "✅ Images Docker envoyées avec succès"
         }
+
+        // STAGE DE SCAN DES IMAGES DOCKER AVEC TRIVY
+        stage('Scan Docker images') {
+            agent any
+            steps {
+                echo 'Scan des images Docker...'
+                script() {
+                    echo "🔍 Scan des images Docker"
+                    sh '''
+                        trivy image --severity HIGH,CRITICAL $DOCKERHUB_USER/userprofile_backend:latest -f json > ~/backend_scan.json
+                        trivy image --severity HIGH,CRITICAL $DOCKERHUB_USER/userprofile_frontend:latest -f json > ~/frontend_scan.json
+
+                        echo "✅ Scan terminé. Résultats enregistrés dans backend_scan.json et frontend_scan.json"
+                    '''
+                }
+            }
+        }
     }
 
 
-        stage('RUN THE APP') {
+        /*stage('RUN THE APP') {
             agent any
             steps {
                 echo 'Lancement de l\'application...'
@@ -128,7 +151,7 @@ pipeline {
                     '''
                 }
             }
-        }
+        }*/
     }
 
     post {

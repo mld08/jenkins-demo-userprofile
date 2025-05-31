@@ -1,0 +1,1 @@
+{"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"app_ingress","Source":"./modules/ingress","Dir":"modules/ingress"},{"Key":"backend","Source":"./modules/backend","Dir":"modules/backend"},{"Key":"frontend","Source":"./modules/frontend","Dir":"modules/frontend"},{"Key":"postgres","Source":"./modules/postgres","Dir":"modules/postgres"}]}

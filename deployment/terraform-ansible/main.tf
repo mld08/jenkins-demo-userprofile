@@ -49,12 +49,29 @@ module "postgres" {
   postgres_db       = "odcdb"
 }
 
+module "app_ingress" {
+  source = "./modules/ingress"
+
+  name                    = "app-ingress"
+  rewrite_target          = "/"
+  frontend_host           = "frontend.mld"
+  frontend_path           = "/"
+  frontend_service_name   = "frontend-service"
+  frontend_service_port   = 80
+  backend_host            = "backend.mld"
+  backend_path            = "/"
+  backend_service_name    = "backend"
+  backend_service_port    = 8000
+  path_type               = "Prefix"
+}
+
+
 // Ansible post-deployment
 // This resource will run the Ansible playbook after the Kubernetes resources are created
-resource "null_resource" "ansible_postdeploy" {
+/*resource "null_resource" "ansible_postdeploy" {
   depends_on = [module.frontend, module.backend, module.postgres]
 
 provisioner "local-exec" {
     command = "ansible-playbook -i ansible/inventory.ini ansible/playbook.yaml"
   }
-}
+}*/
