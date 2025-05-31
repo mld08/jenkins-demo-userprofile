@@ -130,15 +130,15 @@ pipeline {
                 script() {
                     echo "🔍 Scan des images Docker"
                     sh '''
-                        trivy image --severity HIGH,CRITICAL $DOCKERHUB_USER/userprofile_backend:latest -o /home/mld/reports-trivy/backend_scan.txt
-                        trivy image --severity HIGH,CRITICAL $DOCKERHUB_USER/userprofile_frontend:latest -o /home/mld/reports-trivy/frontend_scan.txt
+                        trivy image --severity HIGH,CRITICAL $DOCKERHUB_USER/userprofile_backend:latest -o ~/backend_scan.txt
+                        trivy image --severity HIGH,CRITICAL $DOCKERHUB_USER/userprofile_frontend:latest -o ~/frontend_scan.txt
 
                         echo "✅ Scan terminé. Résultats enregistrés dans backend_scan.txt et frontend_scan.txt"
                         echo "📂 Résultats du scan :"
                         echo "📄 Backend Scan Results:"
-                        cat /home/mld/reports-trivy/backend_scan.txt
+                        cat ~/backend_scan.txt
                         echo "📄 Frontend Scan Results:"
-                        cat /home/mld/reports-trivy/frontend_scan.txt
+                        cat ~/frontend_scan.txt
                     '''
                 }
             }
@@ -152,7 +152,7 @@ pipeline {
                 script() {
                     echo "🚨 Vérification des vulnérabilités critiques..."
                     sh '''
-                        if grep -q 'CRITICAL' /home/mld/reports-trivy/backend_scan.txt || grep -q 'CRITICAL' /home/mld/reports-trivy/frontend_scan.txt; then
+                        if grep -q 'CRITICAL' ~/backend_scan.txt || grep -q 'CRITICAL' ~/frontend_scan.txt; then
                             echo "❌ Des vulnérabilités critiques ont été détectées. Échec du pipeline."
                             exit 1
                         else
