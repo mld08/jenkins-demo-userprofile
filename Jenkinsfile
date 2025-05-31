@@ -185,7 +185,7 @@ pipeline {
             agent any
             steps {
                 echo 'Déploiement avec Terraform et Ansible...'
-                script() {
+                withEnv(["KUBECONFIG=/home/mld/.kube/config"]) {
                     echo "🚀 Déploiement avec Terraform et Ansible"
                     sh '''
                         # Initialize Terraform
@@ -199,6 +199,20 @@ pipeline {
                         # ansible-playbook -i inventory.ini deploy.yml
                     '''
                 }
+                /*script() {
+                    echo "🚀 Déploiement avec Terraform et Ansible"
+                    sh '''
+                        # Initialize Terraform
+                        cd deployment/terraform-ansible
+                        terraform init
+
+                        # Apply Terraform configuration
+                        terraform apply -auto-approve
+
+                        # Run Ansible playbook for deployment
+                        # ansible-playbook -i inventory.ini deploy.yml
+                    '''
+                }*/
             }
         }
 
