@@ -68,10 +68,10 @@ module "app_ingress" {
 
 // Ansible post-deployment
 // This resource will run the Ansible playbook after the Kubernetes resources are created
-/*resource "null_resource" "ansible_postdeploy" {
-  depends_on = [module.frontend, module.backend, module.postgres]
+resource "null_resource" "ansible_postdeploy" {
+  depends_on = [module.frontend, module.backend, module.postgres, module.app_ingress]
 
 provisioner "local-exec" {
     command = "ansible-playbook -i ansible/inventory.ini ansible/playbook.yaml"
   }
-}*/
+}
