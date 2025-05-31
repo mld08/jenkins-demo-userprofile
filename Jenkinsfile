@@ -190,6 +190,7 @@ pipeline {
                     sh '''
                         # Initialize Terraform
                         cd deployment/terraform-ansible
+                        terraform destroy -auto-approve || true # Destroy any existing infrastructure
                         terraform init
 
                         # Apply Terraform configuration
