@@ -189,7 +189,7 @@ pipeline {
                     echo "🚀 Déploiement avec Terraform et Ansible"
                     sh '''
                         # Initialize Terraform
-                        cd terraform-ansible
+                        cd deployment/terraform-ansible
                         terraform init
 
                         # Apply Terraform configuration
