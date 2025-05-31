@@ -139,8 +139,19 @@ pipeline {
                         cat ~/backend_scan.txt
                         echo "📄 Frontend Scan Results:"
                         cat ~/frontend_scan.txt
+                    '''
+                }
+            }
+        }
 
-                        echo "🚨 Vérification des vulnérabilités critiques..."
+        // STAGE DE VÉRIFICATION DES VULNÉRABILITÉS
+        stage('Vérification des vulnérabilités') {
+            agent any
+            steps {
+                echo 'Vérification des vulnérabilités critiques...'
+                script() {
+                    echo "🚨 Vérification des vulnérabilités critiques..."
+                    sh '''
                         if grep -q 'CRITICAL' ~/backend_scan.txt || grep -q 'CRITICAL' ~/frontend_scan.txt; then
                             echo "❌ Des vulnérabilités critiques ont été détectées. Échec du pipeline."
                             exit 1
