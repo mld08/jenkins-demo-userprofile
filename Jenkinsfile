@@ -58,7 +58,7 @@ pipeline {
                     }
                 }
             }
-        }*/
+        }
 
         // TEST STAGE 
         stage('Build & Test Django app') {
@@ -99,7 +99,7 @@ pipeline {
                     '''
                 }
             }
-        }
+        }*/
 
         // STAGE DE DEPLOIEMENT
         stage('Build Docker image') {
