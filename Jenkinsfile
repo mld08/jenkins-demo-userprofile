@@ -197,7 +197,7 @@ pipeline {
                         terraform apply -auto-approve
 
                         # Run Ansible playbook for deployment
-                        # ansible-playbook -i inventory.ini deploy.yml
+                        ansible-playbook -i ansible/inventory.ini ansible/playbook.yaml
                     '''
                 }
             }
