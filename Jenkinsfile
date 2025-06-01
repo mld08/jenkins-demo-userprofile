@@ -26,10 +26,11 @@ pipeline {
                 script {
                     echo "🔍 Scan du code source avec Trivy"
                     sh '''
-                        trivy fs --scanners secret,misconfig,vuln --severity HIGH,CRITICAL . -o ~/code_scan.txt
+                        mkdir -p ~/trivy-reports
+                        trivy fs --scanners secret,misconfig,vuln --severity HIGH,CRITICAL . -o ~/trivy-reports/code_scan.txt
                         echo "✅ Scan terminé. Résultats enregistrés dans code_scan.txt"
                         echo "📂 Résultats du scan :"
-                        cat ~/code_scan.txt
+                        cat ~/trivy-reports/code_scan.txt
                     '''
                 }
             }
@@ -132,15 +133,16 @@ pipeline {
                 script() {
                     echo "🔍 Scan des images Docker"
                     sh '''
-                        trivy image --severity HIGH,CRITICAL $DOCKERHUB_USER/userprofile_backend:latest -o ~/backend_scan.txt
-                        trivy image --severity HIGH,CRITICAL $DOCKERHUB_USER/userprofile_frontend:latest -o ~/frontend_scan.txt
+                        mkdir -p ~/trivy-reports
+                        trivy image --severity HIGH,CRITICAL $DOCKERHUB_USER/userprofile_backend:latest -o ~/trivy-reports/backend_scan.txt
+                        trivy image --severity HIGH,CRITICAL $DOCKERHUB_USER/userprofile_frontend:latest -o ~/trivy-reports/frontend_scan.txt
 
                         echo "✅ Scan terminé. Résultats enregistrés dans backend_scan.txt et frontend_scan.txt"
                         echo "📂 Résultats du scan :"
                         echo "📄 Backend Scan Results:"
-                        cat ~/backend_scan.txt
+                        cat ~/trivy-reports/backend_scan.txt
                         echo "📄 Frontend Scan Results:"
-                        cat ~/frontend_scan.txt
+                        cat ~/trivy-reports/frontend_scan.txt
                     '''
                 }
             }
