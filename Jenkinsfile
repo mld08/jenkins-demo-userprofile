@@ -124,21 +124,6 @@ pipeline {
             }
         }
 
-        stage('Push docker images') {
-            agent any
-            steps {
-                echo "🚀 Envoi des images Docker sur Docker Hub"
-                withCredentials([usernamePassword(credentialsId: 'userprofile-credentials', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKER_PASSWORD')]) {
-                    sh '''
-                        echo "$DOCKER_PASSWORD" | docker login -u "$DOCKERHUB_USER" --password-stdin
-                        docker push $DOCKERHUB_USER/userprofile_backend:latest
-                        docker push $DOCKERHUB_USER/userprofile_frontend:latest
-                    '''
-                }
-                echo "✅ Images Docker envoyées avec succès"
-            }
-        }
-
         // STAGE DE SCAN DES IMAGES DOCKER AVEC TRIVY
         stage('Scan Docker images') {
             agent any
@@ -158,6 +143,21 @@ pipeline {
                         cat ~/frontend_scan.txt
                     '''
                 }
+            }
+        }
+
+        stage('Push docker images') {
+            agent any
+            steps {
+                echo "🚀 Envoi des images Docker sur Docker Hub"
+                withCredentials([usernamePassword(credentialsId: 'userprofile-credentials', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    sh '''
+                        echo "$DOCKER_PASSWORD" | docker login -u "$DOCKERHUB_USER" --password-stdin
+                        docker push $DOCKERHUB_USER/userprofile_backend:latest
+                        docker push $DOCKERHUB_USER/userprofile_frontend:latest
+                    '''
+                }
+                echo "✅ Images Docker envoyées avec succès"
             }
         }
 
