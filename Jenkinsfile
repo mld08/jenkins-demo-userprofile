@@ -27,7 +27,7 @@ pipeline {
                     echo "🔍 Scan du code source avec Trivy"
                     sh '''
                         mkdir -p ~/trivy-reports
-                        trivy fs --scanners secret,misconfig,vuln --severity HIGH,CRITICAL . -o ~/trivy-reports/code_scan.txt
+                        trivy config --scanners secret,misconfig,vuln --severity HIGH,CRITICAL . -o ~/trivy-reports/code_scan.txt
                         echo "✅ Scan terminé. Résultats enregistrés dans code_scan.txt"
                         echo "📂 Résultats du scan :"
                         cat ~/trivy-reports/code_scan.txt
